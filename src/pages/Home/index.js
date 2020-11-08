@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BlogItem, Button, Gap } from '../../components'
 import './home.scss'
 import { useHistory } from 'react-router-dom'
+import Axios from 'axios'
 
 const Home = () => {
-    const history = useHistory()
+    const history = useHistory();
+    const [dataBlog, setDataBlog] = useState([]);
+
+    useEffect(() => {
+        Axios.get('http://localhost:4000/v1/blog/posts')
+        .then(result => {
+            console.log('Data API', result.data);
+            const responseAPI = result.data;
+            setDataBlog(responseAPI.data)
+        })
+        .catch(err => {
+            console.log('error: ', err)
+        })
+    }, [])
 
     return (
         <div className="home-page-wrapper">
@@ -13,10 +27,15 @@ const Home = () => {
            </div>
            <Gap height={20} />
            <div className="content-wrapper">
-                <BlogItem />
-                <BlogItem />
-                <BlogItem />
-                <BlogItem />
+               {dataBlog.map(blog => {
+                   return <BlogItem 
+                            key={blog._id} 
+                            image={`http://localhost:4000/${blog.image}`} 
+                            title={blog.title} 
+                            body={blog.body}
+                            name={blog.author.name}
+                            date={blog.createdAt} />
+               })}
            </div>
            <div className="pagination">
                <Button title="Previous" />
