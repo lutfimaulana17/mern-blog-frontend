@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { BlogItem, Button, Gap } from '../../components'
 import './home.scss'
 import { useHistory } from 'react-router-dom'
 import Axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Home = () => {
     const history = useHistory();
-    const [dataBlog, setDataBlog] = useState([]);
+    const { dataBlog } = useSelector(state => state.homeReducer)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         Axios.get('http://localhost:4000/v1/blog/posts')
         .then(result => {
-            console.log('Data API', result.data);
             const responseAPI = result.data;
-            setDataBlog(responseAPI.data)
+            dispatch({type: 'UPDATE_DATA_BLOG', payload: responseAPI.data})
         })
         .catch(err => {
             console.log('error: ', err)
