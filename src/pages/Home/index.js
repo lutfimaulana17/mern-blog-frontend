@@ -1,25 +1,27 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BlogItem, Button, Gap } from '../../components'
 import './home.scss'
 import { useHistory } from 'react-router-dom'
-import Axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
+import { setDataBlog } from '../../config/redux/action/homeAction'
 
 const Home = () => {
+    const [counter, setCounter] = useState(1)
     const history = useHistory();
-    const { dataBlog } = useSelector(state => state.homeReducer)
+    const { dataBlog, page } = useSelector(state => state.homeReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        Axios.get('http://localhost:4000/v1/blog/posts')
-        .then(result => {
-            const responseAPI = result.data;
-            dispatch({type: 'UPDATE_DATA_BLOG', payload: responseAPI.data})
-        })
-        .catch(err => {
-            console.log('error: ', err)
-        })
-    }, [])
+        dispatch(setDataBlog(counter))
+    }, [counter])
+
+    const previous = () => {
+        setCounter(counter <= 1 ? 1 : counter - 1)
+    }
+
+    const next = () => {
+        setCounter(counter === page.totalPage ? page.totalPage : counter + 1)
+    }
 
     return (
         <div className="home-page-wrapper">
@@ -39,9 +41,11 @@ const Home = () => {
                })}
            </div>
            <div className="pagination">
-               <Button title="Previous" />
+               <Button title="Previous" onClick={previous} />
                <Gap width={20} />
-               <Button title="Next" />
+               <p className="text-page">{page.currentPage} / {page.totalPage}</p>
+               <Gap width={20} />
+               <Button title="Next" onClick={next} />
            </div>
            <Gap height={20} />
         </div>
