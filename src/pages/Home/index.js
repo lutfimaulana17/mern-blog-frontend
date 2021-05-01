@@ -37,7 +37,8 @@ const Home = () => {
                             title={blog.title} 
                             body={blog.body}
                             name={blog.author.name}
-                            date={blog.createdAt} />
+                            date={blog.createdAt}
+                            _id={blog._id} />
                })}
            </div>
            <div className="pagination">

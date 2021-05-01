@@ -14,7 +14,7 @@ const BlogItem = (props) => {
                 <p className="author">{name} - {date}</p>
                 <p className="body">{body}</p>
                 <Gap height={20} />
-                <Button title="View Detail" onClick={() => history.push('/detail-blog')} />
+                <Button title="View Detail" onClick={() => history.push(`/detail-blog/${props._id}`)} />
             </div>
         </div>
     )
