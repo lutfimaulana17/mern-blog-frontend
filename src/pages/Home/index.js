@@ -4,6 +4,9 @@ import './home.scss'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setDataBlog } from '../../config/redux/action/homeAction'
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Axios from 'axios'
 
 const Home = () => {
     const [counter, setCounter] = useState(1)
@@ -23,6 +26,32 @@ const Home = () => {
         setCounter(counter === page.totalPage ? page.totalPage : counter + 1)
     }
 
+    const confirmDelete = (id) => {
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: 'Apakah anda setuju akan menghapus post ini?',
+            buttons: [
+              {
+                label: 'Ya',
+                onClick: () => {
+                    Axios.delete(`http://localhost:4000/v1/blog/post/${id}`)
+                    .then(res => {
+                        console.log('success delete: ', res.data)
+                        dispatch(setDataBlog(counter))
+                    })
+                    .catch(err => {
+                        console.log('error delete: ', err)
+                    })
+                }
+              },
+              {
+                label: 'Tidak',
+                onClick: () => console.log('user tidak setuju!')
+              }
+            ]
+          })
+    }
+
     return (
         <div className="home-page-wrapper">
            <div className="create-wrapper">
@@ -38,7 +67,8 @@ const Home = () => {
                             body={blog.body}
                             name={blog.author.name}
                             date={blog.createdAt}
-                            _id={blog._id} />
+                            _id={blog._id}
+                            onDelete={confirmDelete} />
                })}
            </div>
            <div className="pagination">

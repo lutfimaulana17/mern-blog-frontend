@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 
 const BlogItem = (props) => {
     const history = useHistory()
-    const {image, title, name, date, body} = props;
+    const {image, title, name, date, body, onDelete, _id} = props;
     return (
         <div className="blog-item">
             <img className="image-thumb" src={image} alt="post" />
@@ -13,13 +13,13 @@ const BlogItem = (props) => {
                 <div className="title-wrapper">
                     <p className="title">{title}</p>
                     <div className="edit-wrapper">
-                        <p className="edit" onClick={() => history.push(`/create-blog/${props._id}`)}>Edit</p> | <p className="delete">Delete</p>
+                        <p className="edit" onClick={() => history.push(`/create-blog/${_id}`)}>Edit</p> | <p className="delete" onClick={() => onDelete(_id)}>Delete</p>
                     </div>
                 </div>
                 <p className="author">{name} - {date}</p>
                 <p className="body">{body}</p>
                 <Gap height={20} />
-                <Button title="View Detail" onClick={() => history.push(`/detail-blog/${props._id}`)} />
+                <Button title="View Detail" onClick={() => history.push(`/detail-blog/${_id}`)} />
             </div>
         </div>
     )
